@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import projectRoutes from './routes/projectRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 import { notFound } from './middleware/notFound.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
@@ -18,6 +21,9 @@ export function createApp() {
   if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
 
   app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
+  app.use('/api/projects', projectRoutes); // includes /:projectId/tasks
+  app.use('/api/tasks', taskRoutes);
+  app.use('/api/dashboard', dashboardRoutes);
 
   app.use(notFound);
   app.use(errorHandler);
